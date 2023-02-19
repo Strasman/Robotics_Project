@@ -1,0 +1,56 @@
+{
+    "PlpMain": {
+        "Project": "task3",
+        "Name": "pick",
+        "Type": "PLP",
+        "Version": 1
+    },
+    "GlobalVariableModuleParameters": [
+        {
+            "Name": "toyPick",
+            "Type": "string"
+        }
+    ],
+    "Preconditions": {
+        "GlobalVariablePreconditionAssignments": [
+          ],
+        "PlannerAssistancePreconditionsAssignments": [
+                {
+                    "AssignmentName": "pick_guide",
+                    "AssignmentCode": [
+                        "__heuristicValue = 0;",
+                        "__heuristicValue = (state.robotLocation != 4 && toyPick == \"green\" && state.robotLocation == state.tgreen.discrete && !state.has_toy) ? 100 : __heuristicValue;",
+                        "__heuristicValue = (state.robotLocation != 4 && toyPick == \"blue\" && state.robotLocation == state.tblue.discrete && !state.has_toy) ? 100 : __heuristicValue;",
+                        "__heuristicValue = (state.robotLocation != 4 && toyPick == \"black\" && state.robotLocation == state.tblack.discrete && !state.has_toy) ? 100 : __heuristicValue;",
+                        "__heuristicValue = (state.robotLocation != 4 && toyPick == \"red\" && state.robotLocation == state.tred.discrete && !state.has_toy) ? 100 : __heuristicValue;",
+                        "__heuristicValue = state.robotLocation == 4 ? 0 : __heuristicValue"
+                    ]
+                }
+            ]
+    },
+    "DynamicModel": {
+        "NextStateAssignments": [    
+            {
+                "AssignmentCode": [
+                "bool preCondition = (state.robotLocation != 4 && !state.has_toy);",
+                "__moduleResponse = eFailed;",
+                "bool success = false;",
+                "if(preCondition){",
+                "success = ( ",
+                "   state.robotLocation == state.tgreen.discrete && toyPick == \"green\" ? true : ",
+                "   state.robotLocation == state.tblue.discrete && toyPick == \"blue\" ?  true :",
+                "   state.robotLocation == state.tblack.discrete && toyPick == \"black\" ? true :",
+                "   state.robotLocation == state.tred.discrete &&  toyPick == \"red\" ? true : false);}",
+                "if (success){ __moduleResponse = eSuccess; state__.has_toy = true;",
+                "if (toyPick == \"green\") {state__.tgreen.with_robot = true;}",
+                "if (toyPick == \"blue\") {state__.tblue.with_robot = true;}",
+                "if (toyPick == \"black\") {state__.tblack.with_robot = true;}",
+                "if (toyPick == \"red\") {state__.tred.with_robot = true;}}",
+                "state__.sumpicks = state.sumpicks + 1;",
+                "__reward = success ? -1 : -2;"
+                ]
+            }
+        ]
+    }
+}
+

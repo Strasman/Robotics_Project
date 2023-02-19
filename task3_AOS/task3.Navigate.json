@@ -1,0 +1,45 @@
+{
+    "PlpMain": {
+        "Project": "task3",
+        "Name": "navigate",
+        "Type": "PLP",
+        "Version": 1
+    },
+    "GlobalVariableModuleParameters": [
+        {
+            "Name": "location",
+            "Type": "int"
+        }
+    ],
+    "Preconditions": {
+        "GlobalVariablePreconditionAssignments": [],
+        "PlannerAssistancePreconditionsAssignments": [
+                {
+                    "AssignmentName": "nav_guide",
+                    "AssignmentCode": [
+                        "__heuristicValue = 0;",
+                        "__heuristicValue = (state.robotLocation != 4 && state.has_toy && location == 4) ? 100 : __heuristicValue;",
+                        "int max = 0;",
+                        "int go_to = 0;",
+                        "if(!state.has_toy)",
+                        "{ for(int i=0; i < state.tToyObjects.size(); i++)  { if(state.tToyObjects[i]->discrete != 4 && state.tToyObjects[i]->reward > max)",
+                         "{max = state.tToyObjects[i]->reward; go_to = state.tToyObjects[i]->discrete;} }",
+                        "__heuristicValue = go_to == location ? 100 : __heuristicValue;}",
+                        "__heuristicValue = (state.robotLocation == location) ? 0 : __heuristicValue;"
+                    ]
+                }
+            ]
+    },
+    "DynamicModel": {
+        "NextStateAssignments": [
+            {
+                "AssignmentCode": [
+                "bool success2 = state.robotLocation != location;",
+                "__moduleResponse = eSuccess;",
+                "state__.robotLocation = location;",
+                "__reward = success2 ? -3 : -4;"
+                ]
+            }
+        ]
+    }
+}

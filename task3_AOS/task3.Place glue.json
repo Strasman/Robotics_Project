@@ -1,0 +1,53 @@
+{
+    "PlpMain": {
+        "Project": "task3",
+        "Name": "place",
+        "Type": "Glue",
+        "Version": 1.0
+    },
+    "GlueFramework": "ROS",
+    "ModuleResponse": {
+        "ResponseRules": [
+            {
+                "Response": "eSuccess",
+                "ConditionCodeWithLocalVariables": "placeSuccess"
+            },
+            {
+                "Response": "eFailed",
+                "ConditionCodeWithLocalVariables": "True"
+            }
+        ]
+    },
+    "ModuleActivation": {
+        "RosService": {
+            "ImportCode": [
+                {
+                    "From": "std_msgs.msg",
+                    "Import": ["Int32","Bool", "String"]
+                },
+                {
+                    "From": "task3_env.srv",
+                    "Import": ["*"]
+                }          
+            ],
+            "ServicePath": "/place",
+            "ServiceName": "place"
+        }
+    },
+    "LocalVariablesInitialization": [
+        {
+            "LocalVariableName": "placeSuccess",
+            "VariableType":"bool",
+            "FromROSServiceResponse": true,
+            "AssignmentCode": "placeSuccess=__input.success",
+            "ImportCode": [
+                {
+                    "From": "std_msgs.msg",
+                    "Import": [
+                    "Bool"
+                    ]
+                }
+            ]
+        }
+    ]
+}

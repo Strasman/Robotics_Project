@@ -1,0 +1,195 @@
+{
+    "PlpMain": {
+        "Project": "task3",
+        "Name": "task3_environment",
+        "Type": "Environment",
+        "Version": 1
+    },
+    "EnvironmentGeneral": {
+        "Horizon": 20,
+        "Discount": 0.97
+    },
+    "GlobalVariableTypes": [
+        {
+            "TypeName": "tToy",
+            "Type": "compound",
+            "Variables": [
+                {
+                    "Name": "discrete",
+                    "Type": "int",
+                    "Default": "1"
+                },
+                {
+                    "Name": "toy_type",
+                    "Type": "string",
+                    "Default": "\"green\""
+                },
+                {
+                    "Name": "reward",
+                    "Type": "int",
+                    "Default": "0"
+                },
+                {
+                    "Name": "with_robot",
+                    "Type": "bool",
+                    "Default": "false"
+                }
+            ]
+        }
+    ],
+    "GlobalVariablesDeclaration": [
+        {
+            "Name": "robotLocation",
+            "Type": "int",
+            "DefaultCode": "state.robotLocation = 4;"
+        },
+        {
+            "Name": "l0",
+            "Type": "int",
+            "DefaultCode": "state.l0 = 0;",
+            "IsActionParameterValue": true
+        },
+        {
+            "Name": "l1",
+            "Type": "int",
+            "DefaultCode": "state.l1 = 1;",
+            "IsActionParameterValue": true
+        },
+        {
+            "Name": "l2",
+            "Type": "int",
+            "DefaultCode": "state.l2 = 2;",
+            "IsActionParameterValue": true
+        },
+        {
+            "Name": "l3",
+            "Type": "int",
+            "DefaultCode": "state.l3 = 3;",
+            "IsActionParameterValue": true
+        },
+        {
+            "Name": "l4",
+            "Type": "int",
+            "DefaultCode": "state.l4 = 4;",
+            "IsActionParameterValue": true
+        },
+        {
+            "Name": "cgr",
+            "Type": "string",
+            "DefaultCode": "state.cgr = \"green\";",
+            "IsActionParameterValue": true
+        },
+        {
+            "Name": "cbe",
+            "Type": "string",
+            "DefaultCode": "state.cbe = \"blue\";",
+            "IsActionParameterValue": true
+        },
+        {
+            "Name": "cbk",
+            "Type": "string",
+            "DefaultCode": "state.cbk = \"black\";",
+            "IsActionParameterValue": true
+        },
+        {
+            "Name": "cre",
+            "Type": "string",
+            "DefaultCode": "state.cre = \"red\";",
+            "IsActionParameterValue": true
+        },
+        {
+            "Name": "tgreen",
+            "Type": "tToy",
+            "DefaultCode": "state.tgreen.discrete = -1; state.tgreen.toy_type=\"green\"; state.tgreen.reward = 0; state.tgreen.with_robot = false;"
+        },
+        {
+            "Name": "tblue",
+            "Type": "tToy",
+            "DefaultCode": "state.tblue.discrete = -1; state.tblue.toy_type=\"blue\"; state.tblue.reward = 0; state.tblue.with_robot = false;"
+        },
+        {
+            "Name": "tblack",
+            "Type": "tToy",
+            "DefaultCode": "state.tblack.discrete = -1; state.tblack.toy_type=\"black\"; state.tblack.reward = 0; state.tblack.with_robot = false;"
+        },
+        {
+            "Name": "tred",
+            "Type": "tToy",
+            "DefaultCode": "state.tred.discrete = -1; state.tred.toy_type=\"red\"; state.tred.reward = 0; state.tred.with_robot = false;"
+        },
+        {
+            "Name": "sumpicks",
+            "Type": "int",
+            "DefaultCode": "state.sumpicks = 0;"
+        },
+        {
+            "Name": "has_toy",
+            "Type": "bool",
+            "DefaultCode": "state.has_toy = false;"
+        }
+    ],
+    "InitialBeliefStateAssignments": [
+        {
+            "AssignmentName":"set locations",
+            "AssignmentCode":
+            [
+                "vector<float> greenWeights{0.1,0.05,0.8,0.05};",
+                "int sampled_green = AOSUtils::SampleDiscrete(greenWeights);",
+                "vector<float> blueWeights{0.7,0.1,0.1,0.1};",
+                "float downGrade = (blueWeights[sampled_green] / 3);",
+                "for(int i = 0; i < blueWeights.size(); i++) { if( i != sampled_green){blueWeights[i] += downGrade;} else {blueWeights[i] = 0;}}",
+                "int sampled_blue = AOSUtils::SampleDiscrete(blueWeights);",
+                "vector<float> blackWeights{0.5,0.5,0.5,0.5};",
+                "for(int j = 0; j < blackWeights.size(); j++) { if(j == sampled_green || j == sampled_blue) blackWeights[j] = 0;}",
+                "int sampled_black = AOSUtils::SampleDiscrete(blackWeights);",
+                "int sampled_red = 0;",
+                "for(int k = 0; k < 4; k++) { if(k != sampled_green && k != sampled_blue && k != sampled_black) sampled_red = k;}",
+                "state.tgreen.discrete = sampled_green;",
+                "state.tblue.discrete = sampled_blue;",
+                "state.tblack.discrete = sampled_black;",
+                "state.tred.discrete = sampled_red;"
+            ]
+        },
+        {
+            "AssignmentName":"set rewards",
+            "AssignmentCode":
+            [
+                "vector<float>rewards{10,20,10,40};",
+                "vector<float> greenRewards{0.8,0.05,0.1,0.05};",
+                "int sampled_green1 = AOSUtils::SampleDiscrete(greenRewards);",
+                "vector<float> blueRewards{0.1,0.7,0.1,0.1};",
+                "float downGrade1 = (blueRewards[sampled_green1] / 3);",
+                "for(int i = 0; i < blueRewards.size(); i++) { if( i != sampled_green1){blueRewards[i] += downGrade1;} else {blueRewards[i] = 0;}}",
+                "int sampled_blue1 = AOSUtils::SampleDiscrete(blueRewards);",
+                "vector<float> blackRewards{0.5,0.5,0.5,0.5};",
+                "for(int j = 0; j < blackRewards.size() && (j == sampled_green1 || j == sampled_blue1); j++) { blackRewards[j] = 0;}",
+                "int sampled_black1 = AOSUtils::SampleDiscrete(blackRewards);",
+                "int sampled_red1 = 0;",
+                "for(int k = 0; k < 4; k++) { if(k != sampled_green1 && k != sampled_blue1 && k != sampled_black1) sampled_red1 = k;}",
+                "state.tgreen.reward = rewards[sampled_green1];",
+                "state.tblue.reward = rewards[sampled_blue1];",
+                "state.tblack.reward = rewards[sampled_black1];",
+                "state.tred.reward = rewards[sampled_red1];"
+            ]
+        }
+
+    ],
+    "SpecialStates": [
+        {
+            "StateConditionCode": "(state.tred.discrete == 4 && state.tblack.discrete == 4 && state.tblue.discrete == 4 && state.tgreen.discrete == 4)",
+            "Reward": 0.0,
+            "IsGoalState": true
+        },
+        {
+            "StateConditionCode": "state.sumpicks > 6",
+            "Reward": 0.0,
+            "IsGoalState": true
+        },
+        {
+            "StateConditionCode": "(state.sumpicks == 6 && !state.has_toy)",
+            "Reward": 0.0,
+            "IsGoalState": true
+        }
+    ],
+    "ExtrinsicChangesDynamicModel": []
+}

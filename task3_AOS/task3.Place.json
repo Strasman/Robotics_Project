@@ -1,0 +1,40 @@
+{
+    "PlpMain": {
+        "Project": "task3",
+        "Name": "place",
+        "Type": "PLP",
+        "Version": 1
+    },
+    "GlobalVariableModuleParameters": [
+    ],
+    "Preconditions": {
+        "PlannerAssistancePreconditionsAssignments": [
+                {
+                    "AssignmentName": "place_guide",
+                    "AssignmentCode": [
+                        "__heuristicValue = 0;",
+                        "__heuristicValue = (state.has_toy == true && state.robotLocation == 4) ? 100 : 0;"
+                    ]
+                }
+            ]
+    },
+    "DynamicModel": {
+        "NextStateAssignments": [
+            {
+                "AssignmentCode": [
+                "bool success1 = state.has_toy;",
+                "bool rightPlace = state.robotLocation == 4;",
+                "state__.has_toy = false;",
+                "if (success1) {",
+                "if (state.tgreen.with_robot) { state__.tgreen.with_robot = false; state__.tgreen.discrete = state.robotLocation; __reward = rightPlace ? (state.tgreen.reward - 1) : 0;}",
+                "if (state.tred.with_robot) { state__.tred.with_robot = false; state__.tred.discrete = state.robotLocation; __reward = rightPlace ? (state.tred.reward - 1) : 0;}",
+                "if (state.tblack.with_robot) { state__.tblack.with_robot = false; state__.tblack.discrete = state.robotLocation; __reward = rightPlace ? (state.tblack.reward - 1) : 0;}",
+                "if (state.tblue.with_robot) { state__.tblue.with_robot = false; state__.tblue.discrete = state.robotLocation; __reward = rightPlace ? (state.tblue.reward - 1) : 0;}}",
+                "else {__reward = -3;}",
+                "__moduleResponse = success1 ? eSuccess : eFailed;"
+                ]
+        }
+                
+        ]
+    }
+}

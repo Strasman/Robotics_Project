@@ -1,0 +1,64 @@
+{
+    "PlpMain": {
+        "Project": "task3",
+        "Name": "pick",
+        "Type": "Glue",
+        "Version": 1.0
+    },
+    "GlueFramework": "ROS",
+    "ModuleResponse": {
+        "ResponseRules": [
+            {
+                "Response": "eSuccess",
+                "ConditionCodeWithLocalVariables": "pickSuccess"
+            },
+            {
+                "Response": "eFailed",
+                "ConditionCodeWithLocalVariables": "True"
+            }
+        ]
+    },
+    "ModuleActivation": {
+        "RosService": {
+            "ImportCode": [
+                {
+                    "From": "std_msgs.msg",
+                    "Import": ["Int32","Bool", "String"]
+                },
+                {
+                    "From": "task3_env.srv",
+                    "Import": ["*"]
+                }          
+            ],
+            "ServicePath": "/pick",
+            "ServiceName": "pick",
+            "ServiceParameters": [
+                {
+                    "ServiceFieldName": "toy_type",
+                    "AssignServiceFieldCode": "toyType1"
+                }
+            ]
+        }
+    },
+    "LocalVariablesInitialization": [
+        {
+            "InputLocalVariable": "toyType1",
+            "FromGlobalVariable": "toyPick"
+        },
+        {
+            "LocalVariableName": "pickSuccess",
+            "VariableType":"bool",
+            "FromROSServiceResponse": true,
+            "AssignmentCode": "pickSuccess=__input.success",
+            "ImportCode": [
+                {
+                    "From": "std_msgs.msg",
+                    "Import": [
+                    "Bool"
+                    ]
+                }
+            ]
+        }
+
+    ]
+}
